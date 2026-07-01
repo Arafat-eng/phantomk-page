@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="referrer" content="no-referrer">
+<title>@PHA</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,600,700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{
+  height:100%;
+  overflow:hidden;
+  font-family:'Satoshi',sans-serif;
+}
+#bg-video{
+  position:fixed;inset:0;
+  width:100vw;height:100vh;
+  object-fit:cover;z-index:0;
+  pointer-events:none;
+}
+#enter-overlay{
+  position:fixed;inset:0;
+  z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.75);
+  cursor:pointer;
+  transition:opacity 0.5s ease,visibility 0.5s ease;
+}
+#enter-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
+#enter-overlay span{
+  color:rgba(255,255,255,0.4);
+  font-size:13px;letter-spacing:3.5px;text-transform:uppercase;
+  font-weight:500;
+  animation:fadePulse 2.5s ease-in-out infinite;
+}
+@keyframes fadePulse{
+  0%,100%{opacity:0.4}
+  50%{opacity:0.9}
+}
+#main{
+  position:fixed;inset:0;
+  z-index:10;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  opacity:0;
+  transition:opacity 0.6s ease;
+  pointer-events:none;
+}
+#main.visible{opacity:1;pointer-events:auto}
+#name{
+  font-weight:600;
+  font-size:39.5px;
+  letter-spacing:normal;
+  line-height:normal;
+  margin-bottom:30px;
+  color:transparent;
+  -webkit-background-clip:text;
+  background-clip:text;
+  background-image:linear-gradient(90deg,#f0f,#8000ff,#00f,#0f0,#ff0,#ff8000,#f00);
+  background-size:1400% 100%;
+  animation:rainbow 6s linear infinite;
+}
+@keyframes rainbow{
+  0%{background-position:0% 50%}
+  100%{background-position:1400% 50%}
+}
+.links-row{
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+}
+.link-wrap{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.link-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;height:40px;
+  text-decoration:none;
+  transition:opacity 0.15s ease;
+}
+.link-btn:hover{opacity:0.7}
+.link-btn img{
+  width:40px;height:40px;
+  object-fit:cover;
+  display:block;
+  pointer-events:none;
+}
+#audio-toggle{
+  position:fixed;top:14px;right:14px;
+  z-index:50;
+  width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  color:rgba(255,255,255,0.5);
+  font-size:15px;
+  text-decoration:none;
+  transition:opacity 0.2s;
+  background:transparent;
+  border:none;
+}
+#audio-toggle:hover{opacity:0.7}
+#audio-toggle.muted{opacity:0.35}
+</style>
+</head>
+<body>
+<video id="bg-video" autoplay muted loop playsinline referrerpolicy="no-referrer" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%230a0a0a'/%3E%3C/svg%3E">
+  <source src="https://r2.guns.lol/bb1605c2-2f0c-49ea-9f10-d690656cb395.mp4" type="video/mp4">
+</video>
+<audio id="bg-audio" loop preload="auto">
+  <source src="https://r2.guns.lol/2d18fa38-b8f2-4958-b53f-c94852837d00.mp3" type="audio/mpeg">
+</audio>
+<div id="enter-overlay" onclick="enterSite()">
+  <span>click to enter...</span>
+</div>
+<button id="audio-toggle" onclick="toggleAudio()" class="muted">♪</button>
+<div id="main">
+  <div id="name">PHANTO MK</div>
+  <div class="links-row">
+    <div class="link-wrap">
+      <a class="link-btn" href="https://youtube.com/@phanto_mk" target="_blank" rel="noopener">
+        <img src="https://r2.guns.lol/c046f3a2-b3b9-43a1-8e22-eae526030cee.webp" alt="" draggable="false">
+      </a>
+    </div>
+    <div class="link-wrap">
+      <a class="link-btn" href="https://discord.com/invite/KsuaxkU4AJ" target="_blank" rel="noopener">
+        <img src="https://r2.guns.lol/66bca32d-72e1-4ec3-bc4f-5560dced1baf.webp" alt="" draggable="false">
+      </a>
+    </div>
+    <div class="link-wrap">
+      <a class="link-btn" href="https://xbox.com/play/user/Arafatgaming381" target="_blank" rel="noopener">
+        <img src="https://r2.guns.lol/26ae1d50-e7cf-4845-8cc5-ebefbf172c0b.webp" alt="" draggable="false">
+      </a>
+    </div>
+  </div>
+</div>
+<script>
+let entered = false;
+let audioStarted = false;
+const audio = document.getElementById('bg-audio');
+const toggle = document.getElementById('audio-toggle');
+function enterSite(){
+  if(entered) return;
+  entered = true;
+  document.getElementById('enter-overlay').classList.add('hidden');
+  document.getElementById('main').classList.add('visible');
+  if(!audioStarted){
+    audio.volume = 0.15;
+    audio.play().then(()=>{
+      audioStarted = true;
+      toggle.classList.remove('muted');
+    }).catch(()=>{});
+  }
+}
+function toggleAudio(){
+  if(!audioStarted) return;
+  if(audio.paused){
+    audio.play();
+    toggle.classList.remove('muted');
+  } else {
+    audio.pause();
+    toggle.classList.add('muted');
+  }
+}
+document.addEventListener('keydown', e => {
+  if((e.key === 'Enter' || e.key === ' ') && !entered){
+    e.preventDefault();
+    enterSite();
+  }
+});
+</script>
+</body>
+</html>
